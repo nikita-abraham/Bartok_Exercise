@@ -56,7 +56,7 @@ public class Prospector : MonoBehaviour {
 		if (PlayerPrefs.HasKey ("ProspectorHighScore")) {
 			HIGH_SCORE = PlayerPrefs.GetInt ("ProspectorHighScore");
 		}
-		//add the score from last round, which will be >0 if it was a win 
+		//add the score from last round, whihc will be >0 if it was a win 
 		score += SCORE_FROM_PREV_ROUND;
 		//reset the SCORE_FROM_PREV_ROUND
 		SCORE_FROM_PREV_ROUND = 0;
@@ -406,6 +406,7 @@ public class Prospector : MonoBehaviour {
 			ShowResultGTs(true);
 			break;
 		case ScoreEvent.gameLoss:
+			GTGameOver.text = "Game Over";
 			// If it is a loss check against the high score
 			if (Prospector.HIGH_SCORE <= score) {
 				print ("You got the high score! High score: " + score);
@@ -424,5 +425,5 @@ public class Prospector : MonoBehaviour {
 			break;
 		}
 	}
-}
 
+}
