@@ -396,8 +396,11 @@ MonoBehaviour:
     layerID: 0
     id: 0
     hiddenBy: 
+    rot: 0
     type: slot
     stagger: {x: 0, y: 0}
+    player: 0
+    pos: {x: 0, y: 0, z: 0}
   discardPile:
     x: 0
     y: 0
@@ -406,8 +409,11 @@ MonoBehaviour:
     layerID: 0
     id: 0
     hiddenBy: 
+    rot: 0
     type: slot
     stagger: {x: 0, y: 0}
+    player: 0
+    pos: {x: 0, y: 0, z: 0}
   sortingLayerNames:
   - Row0
   - Row1
