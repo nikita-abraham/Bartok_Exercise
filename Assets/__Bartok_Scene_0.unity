@@ -137,7 +137,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -231,6 +231,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 435e7ded43dd8459a9fd291dd5e83089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deckXML: {fileID: 4900000, guid: c76312a0fb08948699e1abf935e4a957, type: 3}
+  layoutXML: {fileID: 0}
+  layoutCenter: {x: 0, y: 0, z: 0}
+  ________________: 0
+  deck: {fileID: 0}
+  drawPile: []
+  discardPile: []
 --- !u!1 &1257087903
 GameObject:
   m_ObjectHideFlags: 0
