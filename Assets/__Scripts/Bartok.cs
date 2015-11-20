@@ -12,6 +12,8 @@ public class Bartok : MonoBehaviour {
 
 	//the number of degrees to fan each card in a hand
 	public float handFanDegrees = 10f;
+	public int numStartingCards = 7;
+	public float drawTimeStagger = 0.1f;
 
 	public bool ________________;
 
@@ -93,6 +95,41 @@ public class Bartok : MonoBehaviour {
 			pl.playerNum = players.Count;
 		}
 		players [0].type = PlayerType.human; // make the Oth player human
+
+		CardBartok tCB;
+		//deal 7 cards to each player
+		for (int i=0; i<numStartingCards; i++) {
+			for (int j=0; j<4; j++) { //there are always 4 players
+				tCB = Draw (); //draw a card
+				//stagger the draw time a bit. Remember order of operations
+				tCB.timeStart = Time.time + drawTimeStagger * (i * 4 + j);
+				//by setting the timeStart before calling AddCard, we
+				//override the automatic setting of TimeStart in 
+				//CardBartok.MoveTo().
+				//add the card to the player's hand. the modulus (%4)
+				//results in a number from 0 to 3
+				players [(j + 1) % 4].AddCard (tCB);
+			}
+		}
+
+		//call Bartok.DrawFirstTarget() when the hand cards have been drawn.
+		Invoke ("DrawFirstTarget", drawTimeStagger * (numStartingCards * 4+4) );
+	}
+
+	public void DrawFirstTarget() {
+		//flip up the first target card from the drawPile
+		CardBartok tCB = MoveToTarget (Draw());
+	}
+
+	//this makes a new card the target
+	public CardBartok MoveToTarget(CardBartok tCB) {
+		tCB.timeStart = 0;
+		tCB.MoveTo (layout.discardPile.pos + Vector3.back);
+		tCB.state = CBState.toTarget;
+		tCB.faceUp = true;
+
+		targetCard = tCB;
+		return(tCB);
 	}
 
 	//the draw function will pull a single card from the drawPile and return it 

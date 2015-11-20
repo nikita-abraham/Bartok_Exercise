@@ -30,6 +30,23 @@ public class Player {
 
 		// add the card to the hand
 		hand.Add (eCB);
+
+		//sort the cards by rank using LINQ if this is a human
+		if (type == PlayerType.human) {
+			CardBartok[] cards = hand.ToArray (); //copy hand to a new array 
+
+			//below is the LINQ call that works on the array of CardBartoks.
+			//it is similar to doing a foreach (CardBartok cd in cards)
+			//and sorting them by rank. It then returns a sorted array
+			cards = cards.OrderBy (cd => cd.rank).ToArray ();
+
+			//covert the array CardBartok[] back to a List<CardBartok>
+			hand = new List<CardBartok> (cards);
+			//note: LINQ operations can be a bit slow (like it could take a 
+			//couple of milliseconds), but since we're only doing it once
+			//every turn, it isn't a problem
+		}
+
 		FanHand ();
 		return(eCB);
 	}
@@ -76,9 +93,15 @@ public class Player {
 			pos.z = -0.5f*i;
 
 			//set the localPosition and rotation of the ith card in the hand
+			hand[i].MoveTo (pos, rotQ); // tell CardBartok to interpolate
+			hand[i].state = CBState.toHand;
+			//^ After the move, CardBartok will set the state to CBState.hand
+
+			/* 
 			hand[i].transform.localPosition = pos;
 			hand[i].transform.rotation = rotQ;
 			hand[i].state = CBState.hand;
+			*/
 
 			//this uses a comparison operator to return a true or false bool
 			//so, if (type == PlayerType.human, hand[i].faceUp is set to true
