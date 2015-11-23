@@ -34,6 +34,11 @@ using System.Collections.Generic;
 
 		// When the card is done moving, it will call reportFinishTo.SendMessage()
 		public GameObject         reportFinishTo = null;
+		public Player callbackPlayer = null;
+
+	void Awake() {
+		callbackPlayer = null; 
+	}
 
 	// MoveTo tells the card to interpolate to a new position and rotation
 	public void MoveTo(Vector3 ePos, Quaternion eRot) {
@@ -105,7 +110,11 @@ using System.Collections.Generic;
 					//  to null so that it the card doesn't continue to report
 					//  to the same GameObject every subsequent time it moves.
 					reportFinishTo = null;	
-
+				} else if (callbackPlayer != null) {
+					//if there is a callback player
+					//then call CBCallback directly on this player
+					callbackPlayer.CBCallback(this);
+					callbackPlayer = null;
 				} else {
 					//do nothing
 				}

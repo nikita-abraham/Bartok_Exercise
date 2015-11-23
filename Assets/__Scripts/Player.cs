@@ -95,6 +95,12 @@ public class Player {
 			//but which does keep their colliders from overlapping 
 			pos.z = -0.5f*i;
 
+			//the line below makes sure that the card starts moving immediately
+			//if it's not the initial deal at the beginning of the game
+			if (Bartok.S.phase != TurnPhase.idle) {
+				hand[i].timeStart = 0;
+			}
+
 			//set the localPosition and rotation of the ith card in the hand
 			hand[i].MoveTo (pos, rotQ); // tell CardBartok to interpolate
 			hand[i].state = CBState.toHand;
@@ -114,5 +120,44 @@ public class Player {
 			hand[i].eventualSortOrder = i*4;
 			//hand[i].SetSortOrder(i*4);
 		}
+	}
+
+	//the TakeTurn functio enables the AI of the computer players 
+	public void TakeTurn() {
+		Utils.tr (Utils.RoundToPlaces (Time.time), "Player.TakeTurn");
+
+		//don't need to do anything if this is the human player 
+		if (type == PlayerType.human) return;
+		Bartok.S.phase = TurnPhase.waiting;
+
+		CardBartok cb;
+
+		//if this is an AI player, need to make a choice about what to play
+		//find valid plays
+		List<CardBartok> validCards = new List<CardBartok>();
+		foreach (CardBartok tCB in hand) {
+			if (Bartok.S.ValidPlay (tCB)) {
+				validCards.Add (tCB);
+			}
+		}
+		//if there are no valid cards
+		if(validCards.Count == 0) {
+			//draw a card
+			cb = AddCard(Bartok.S.Draw ());
+			cb.callbackPlayer = this;
+			return;
+		}
+
+		//otherwise, if there is a card or more to play, pick one
+		cb = validCards[Random.Range (0,validCards.Count)];
+		RemoveCard(cb);
+		Bartok.S.MoveToTarget(cb);
+		cb.callbackPlayer = this;
+	}
+
+	public void CBCallback (CardBartok tCB) {
+		Utils.tr (Utils.RoundToPlaces (Time.time), "Player.CBCallback()", tCB.name, "Player" + playerNum);
+		//the card is dome moving, so pass the turn
+		Bartok.S.PassTurn ();
 	}
 }
