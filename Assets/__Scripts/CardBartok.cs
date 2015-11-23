@@ -137,6 +137,14 @@ using System.Collections.Generic;
 			break;
 		}
 	}
+
+	//this allows the card to react to being clicked
+	override public void OnMouseUpAsButton(){
+		//call the CardClicked method on the Bartok singleton
+		Bartok.S.CardClicked (this);
+		//also call the base class (Card.cs) version of this method
+		base.OnMouseUpAsButton ();
+	}
 }
 
 

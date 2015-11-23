@@ -243,4 +243,34 @@ public class Bartok : MonoBehaviour {
 		}
 	}
 	*/
+
+	public void CardClicked(CardBartok tCB) {
+		//if it's not the human's turn, don't respond
+		if (CURRENT_PLAYER.type != PlayerType.human)
+			return;
+		//if the game is waiting on a card to move, don't respond
+		if (phase == TurnPhase.waiting)
+			return;
+
+		//act differently based on whether it was a card in hand
+		//or on the drawPile that was clicked
+		switch (tCB.state) {
+		case CBState.drawpile:
+			//draw the top card, not necc. the one clicked
+			CardBartok cb = CURRENT_PLAYER.AddCard (Draw ());
+			cb.callbackPlayer = CURRENT_PLAYER;
+			Utils.tr (Utils.RoundToPlaces (Time.time), "Bartok.CardClicked()", "Draw", cb.name);
+			phase = TurnPhase.waiting;
+			break;
+		case CBState.hand: 
+			//check to see whether the card is valid
+			if (ValidPlay (tCB)) {
+				CURRENT_PLAYER.RemoveCard (tCB);
+				MoveToTarget (tCB);
+				tCB.callbackPlayer = CURRENT_PLAYER;
+				Utils.tr (Utils.RoundToPlaces (Time.time), "Bartok.CardClicked()", "Play", tCB.name, targetCard.name + " is target");
+			}
+			break;
+		}
+	}
 }
